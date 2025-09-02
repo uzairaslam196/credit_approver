@@ -1,0 +1,204 @@
+<.flash_group flash={@flash} />
+
+<!-- Hero Section -->
+<div class="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-30">
+    <div class="w-full h-full" style="background-image: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.1&quot;><circle cx=&quot;7&quot; cy=&quot;7&quot; r=&quot;1&quot;/></g></g></svg>'); background-repeat: repeat;"></div>
+  </div>
+  
+  <div class="relative z-10 px-4 py-16 sm:px-6 lg:px-8 xl:px-16">
+    <div class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-6 shadow-lg">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          </svg>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+          Smart Credit
+          <span class="text-blue-300">Assessment</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+          Get instant credit approval decisions with our advanced evaluation system. Quick, secure, and tailored to your financial profile.
+        </p>
+        
+        <!-- Main CTA Button -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <.link
+            navigate={~p"/credit_calculator"}
+            class="inline-flex items-center px-8 py-4 text-lg font-semibold text-blue-900 bg-white rounded-lg shadow-xl hover:bg-blue-50 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 ease-in-out"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Start Credit Assessment
+          </.link>
+          
+          <p class="text-white/80 text-sm">
+            Quick • Secure • Instant Results
+          </p>
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <!-- Feature 1 -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors duration-300">
+          <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Instant Results</h3>
+          <p class="text-blue-100">Get your credit assessment results in minutes, not days. Our automated system works 24/7.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors duration-300">
+          <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Secure & Private</h3>
+          <p class="text-blue-100">Your financial information is protected with bank-level security and encryption.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors duration-300">
+          <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Smart Analysis</h3>
+          <p class="text-blue-100">Advanced algorithms analyze multiple factors to give you the most accurate assessment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Benefits Section -->
+<div class="py-16 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Why Choose Our Credit Assessment?
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        We make credit evaluation simple, fast, and transparent with personalized results.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Benefit 1 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">5-Minute Process</h3>
+        <p class="text-gray-600">Complete assessment in just a few simple steps</p>
+      </div>
+
+      <!-- Benefit 2 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">No Hidden Fees</h3>
+        <p class="text-gray-600">Transparent pricing with no surprise charges</p>
+      </div>
+
+      <!-- Benefit 3 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Improve Your Score</h3>
+        <p class="text-gray-600">Get personalized tips to boost your credit</p>
+      </div>
+
+      <!-- Benefit 4 -->
+      <div class="text-center">
+        <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">24/7 Support</h3>
+        <p class="text-gray-600">Round-the-clock customer assistance</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        How It Works
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Simple steps to get your credit assessment and approval decision.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Step 1 -->
+      <div class="text-center relative">
+        <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Answer Questions</h3>
+        <p class="text-gray-600">Complete our quick questionnaire about your employment, assets, and financial situation.</p>
+        <!-- Arrow -->
+        <div class="hidden md:block absolute top-6 left-full w-8 h-8 -ml-4">
+          <svg class="w-full h-full text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="text-center relative">
+        <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Get Analysis</h3>
+        <p class="text-gray-600">Our system instantly analyzes your information and calculates your creditworthiness.</p>
+        <!-- Arrow -->
+        <div class="hidden md:block absolute top-6 left-full w-8 h-8 -ml-4">
+          <svg class="w-full h-full text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="text-center">
+        <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Receive Decision</h3>
+        <p class="text-gray-600">Get your credit approval amount and receive a copy of your assessment via email.</p>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center mt-12">
+      <.link
+        navigate={~p"/credit_calculator"}
+        class="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
+      >
+        Get Started Now
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </.link>
+    </div>
+  </div>
+</div>
