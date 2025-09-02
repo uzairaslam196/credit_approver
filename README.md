@@ -164,7 +164,7 @@ mix test --trace
 
 ### Core Technologies
 
-- **Phoenix LiveView**: Real-time, interactive web interface
+- **Phoenix LiveView**: Real-time, interactive web interface with stateful session management
 - **ChromicPDF**: HTML-to-PDF conversion engine
 - **Swoosh**: Email delivery with local preview
 - **Tailwind CSS**: Modern utility-first styling
@@ -195,6 +195,15 @@ lib/
 - **📊 LiveDashboard**: Monitor application metrics at `/dev/dashboard`
 - **🔄 Live Reload**: Automatic browser refresh during development
 - **✨ Hot Code Reloading**: Real-time code updates
+
+### State Management & Persistence
+
+- **📝 LiveView State**: All user answers and progress stored in LiveView process memory
+- **🚀 No Database Required**: Zero persistence layer - pure in-memory session management
+- **⚡ Instant Responses**: No database queries mean lightning-fast interactions
+- **🔧 Easy Migration**: Database persistence can be added later when needed
+
+> **Architecture Decision**: This implementation prioritizes simplicity and speed by using LiveView's built-in state management. User sessions are maintained in memory during the assessment process, and results are immediately delivered via email with PDF attachment. For production scale or audit requirements, adding database persistence would be straightforward.
 
 ---
 
