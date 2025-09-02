@@ -6,9 +6,7 @@ defmodule CreditApprover.PDFGenerator do
   from credit summary data using ChromicPDF.
   """
 
-  alias CreditApprover.{CreditSummary, Utils}
-
-  @default_filename "credit_assessment_summary.pdf"
+  alias CreditApprover.{CreditAssessment.CreditSummary, Utils}
 
   @doc """
   Generates a PDF from a CreditSummary struct.
@@ -34,20 +32,65 @@ defmodule CreditApprover.PDFGenerator do
   """
   @spec generate(CreditSummary.t(), keyword()) :: {:ok, binary()} | {:error, any()}
   def generate(%CreditSummary{} = credit_summary, opts \\ []) do
-    filename = Keyword.get(opts, :filename, @default_filename)
+    # Validate Chrome availability before attempting PDF generation
+    with :ok <- validate_chrome_browser() do
+      # For high-scale applications, prefer memory-based generation
+      case Keyword.get(opts, :method, :memory) do
+        :memory -> generate_in_memory(credit_summary, opts)
+        :file -> generate_with_file(credit_summary, opts)
+      end
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+    # Recommended for production: no file system I/O
+  defp generate_in_memory(%CreditSummary{} = credit_summary, _opts) do
+    try do
+      html = build_html(credit_summary)
+
+      # Generate PDF directly to binary without temp files
+      case ChromicPDF.print_to_pdf({:html, html}) do
+        {:ok, base64_binary} ->
+          # ChromicPDF returns base64 encoded string, decode it to actual binary
+          binary = Base.decode64!(base64_binary)
+          {:ok, binary}
+        {:error, reason} -> {:error, "PDF generation failed: #{inspect(reason)}"}
+      end
+    rescue
+      error ->
+        {:error, "PDF generation failed: #{inspect(error)}"}
+    end
+  end
+
+  # Legacy file-based method with improved safety
+  defp generate_with_file(%CreditSummary{} = credit_summary, opts) do
+    # Generate unique filename to prevent race conditions
+    unique_id = :crypto.strong_rand_bytes(16) |> Base.encode16(case: :lower)
+    timestamp = System.system_time(:microsecond)
+    filename = "credit_assessment_#{timestamp}_#{unique_id}.pdf"
+
     output_path = Keyword.get(opts, :output_path, System.tmp_dir!())
+    tmpfile = Path.join(output_path, filename)
 
     try do
       html = build_html(credit_summary)
-      tmpfile = Path.join(output_path, filename)
 
-      ChromicPDF.print_to_pdf({:html, html}, output: tmpfile)
-      binary = File.read!(tmpfile)
-      File.rm(tmpfile)
+      case ChromicPDF.print_to_pdf({:html, html}, output: tmpfile) do
+        :ok ->
+          binary = File.read!(tmpfile)
+          File.rm(tmpfile)
+          {:ok, binary}
 
-      {:ok, binary}
+        {:error, reason} ->
+          # Cleanup on error
+          if File.exists?(tmpfile), do: File.rm(tmpfile)
+          {:error, "PDF generation failed: #{inspect(reason)}"}
+      end
     rescue
       error ->
+        # Ensure cleanup even on exceptions
+        if File.exists?(tmpfile), do: File.rm(tmpfile)
         {:error, "PDF generation failed: #{inspect(error)}"}
     end
   end
@@ -77,6 +120,26 @@ defmodule CreditApprover.PDFGenerator do
     case generate(credit_summary, opts) do
       {:ok, binary} -> binary
       {:error, reason} -> raise "PDF generation failed: #{reason}"
+    end
+  end
+
+  # Validates that Chrome/Chromium browser is available for PDF generation
+  defp validate_chrome_browser do
+    chrome_path = Application.get_env(:chromic_pdf, :executable_path)
+
+    cond do
+      is_nil(chrome_path) ->
+        require Logger
+        Logger.error("Chrome/Chromium browser path not configured for PDF generation")
+        {:error, "Chrome/Chromium browser not configured. Please install Chrome/Chromium and configure executable_path in config.exs"}
+
+      not File.exists?(chrome_path) ->
+        require Logger
+        Logger.error("Chrome/Chromium browser not found at: #{chrome_path}")
+        {:error, "Chrome/Chromium browser not found at #{chrome_path}. Please install Chrome/Chromium or update the path in config.exs"}
+
+      true ->
+        :ok
     end
   end
 

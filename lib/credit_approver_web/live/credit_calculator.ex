@@ -287,20 +287,7 @@ defmodule CreditApproverWeb.CreditCalculator do
               </div>
 
               <!-- Points Display (Optional - can be removed if not needed) -->
-              <div class="text-lg font-medium text-gray-500 mb-6">
-                <span class="inline-block bg-gray-100 px-4 py-2 rounded-lg">
-                  <svg
-                    class="w-5 h-5 inline-block text-gray-400 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
-                  </svg>
-                  Earned Points: {@earned_points}
-                </span>
-              </div>
+
 
               <!-- Navigation Buttons -->
               <.render_navigation_buttons />
@@ -369,6 +356,11 @@ defmodule CreditApproverWeb.CreditCalculator do
      |> assign(:financial_answers, %{"monthly_expenses" => me, "monthly_income" => mi})}
   end
 
+  # Handle incomplete financial data gracefully
+  def handle_event("financials", _params, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("validate_email", %{"email" => email}, socket) do
     # Simple email validation: check for presence of "@" and "."
     {is_valid, message} =
@@ -428,15 +420,26 @@ defmodule CreditApproverWeb.CreditCalculator do
       end
 
     # Send the email using the Notifier
-    Notifier.send_email(
+    case Notifier.send_credit_assessment_email(
       email,
       basic_question_answers,
       financial_question_answers,
       socket.assigns.allot_credit_amount
-    )
+    ) do
+      {:ok, _email} ->
+        {:noreply,
+         socket
+         |> assign(show_mailbox: true)
+         |> put_flash(:info, "✅ Credit assessment email has been sent successfully! Please check your inbox.")}
 
-    {:noreply,
-     socket |> assign(show_mailbox: true) |> put_flash(:info, "Email has been sent please check!")}
+      {:error, reason} ->
+        require Logger
+        Logger.warning("Failed to send credit assessment email to #{email}: #{inspect(reason)}")
+
+        {:noreply,
+         socket
+         |> put_flash(:error, "❌ Failed to send email. Please check your email address and try again. If the problem persists, contact support.")}
+    end
   end
 
   defp parse_int(step) when is_binary(step) do

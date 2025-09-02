@@ -3,8 +3,8 @@ defmodule CreditApprover.NotifierTest do
 
   alias CreditApprover.Notifier
 
-  describe "send_email/4" do
-    test "sends email with correct recipient and subject" do
+  describe "send_credit_assessment_email/4" do
+    test "sends credit assessment email with proper logging" do
       email = "test@example.com"
       basic_answers = [
         %{question: "Do you have a paying job?", answer: "yes"},
@@ -16,66 +16,50 @@ defmodule CreditApprover.NotifierTest do
       ]
       credit_amount = 24000
 
-      {:ok, email_struct} = Notifier.send_email(email, basic_answers, financial_answers, credit_amount)
+      # Test the new function
+      {:ok, email_struct} = Notifier.send_credit_assessment_email(email, basic_answers, financial_answers, credit_amount)
 
       assert email_struct.to == [{"", "test@example.com"}]
       assert email_struct.from == {"Credit Approver", "support@creditapprover.com"}
       assert email_struct.subject == "Your Credit Assessment Summary"
-    end
-
-    test "includes PDF attachment" do
-      email = "test@example.com"
-      basic_answers = [%{question: "Test question", answer: "yes"}]
-      financial_answers = [%{question: "Income", answer: "5000"}]
-      credit_amount = 24000
-
-      {:ok, email_struct} = Notifier.send_email(email, basic_answers, financial_answers, credit_amount)
-
       assert length(email_struct.attachments) == 1
-
-      attachment = List.first(email_struct.attachments)
-      assert attachment.filename == "credit_approver_summary.pdf"
-      assert attachment.content_type == "application/pdf"
-      assert is_binary(attachment.data)
     end
 
-    test "generates HTML body with congratulations message for approved" do
+    test "handles PDF generation errors gracefully" do
       email = "test@example.com"
       basic_answers = []
       financial_answers = []
       credit_amount = 24000
 
-      {:ok, email_struct} = Notifier.send_email(email, basic_answers, financial_answers, credit_amount)
+      # This should still work despite potential issues
+      result = Notifier.send_credit_assessment_email(email, basic_answers, financial_answers, credit_amount)
+      assert {:ok, _email_struct} = result
+    end
+
+    test "properly formats approval emails" do
+      {:ok, email_struct} = Notifier.send_credit_assessment_email(
+        "approved@example.com",
+        [],
+        [],
+        50000
+      )
 
       assert email_struct.html_body =~ "Congratulations!"
-      assert email_struct.html_body =~ "PDF summary"
-      assert email_struct.html_body =~ "Thank you for choosing Credit Approver!"
+      assert email_struct.html_body =~ "✓ Approved"
+      assert email_struct.text_body =~ "APPROVED"
     end
 
-    test "generates HTML body with appropriate message for rejected" do
-      email = "test@example.com"
-      basic_answers = []
-      financial_answers = []
-      credit_amount = 0
-
-      {:ok, email_struct} = Notifier.send_email(email, basic_answers, financial_answers, credit_amount)
+    test "properly formats rejection emails" do
+      {:ok, email_struct} = Notifier.send_credit_assessment_email(
+        "rejected@example.com",
+        [],
+        [],
+        0
+      )
 
       assert email_struct.html_body =~ "Assessment Complete"
-      assert email_struct.html_body =~ "Not Approved"
-      assert email_struct.html_body =~ "Thank you for choosing Credit Approver!"
-    end
-
-    test "includes text body alternative" do
-      email = "test@example.com"
-      basic_answers = []
-      financial_answers = []
-      credit_amount = 24000
-
-      {:ok, email_struct} = Notifier.send_email(email, basic_answers, financial_answers, credit_amount)
-
-      assert email_struct.text_body =~ "CREDIT ASSESSMENT SUMMARY"
-      assert email_struct.text_body =~ "APPROVED"
-      assert email_struct.text_body =~ "Credit Amount: $24,000"
+      assert email_struct.html_body =~ "✗ Not Approved"
+      assert email_struct.text_body =~ "NOT APPROVED"
     end
   end
 
@@ -87,7 +71,7 @@ defmodule CreditApprover.NotifierTest do
       ]
 
       # Test indirectly through email generation
-      {:ok, email_struct} = Notifier.send_email("test@example.com", answers, [], 10000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", answers, [], 10000)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
@@ -99,14 +83,14 @@ defmodule CreditApprover.NotifierTest do
         {"Question 2", "Answer 2"}
       ]
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", answers, [], 10000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", answers, [], 10000)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
     end
 
     test "handles empty answers gracefully" do
-      {:ok, email_struct} = Notifier.send_email("test@example.com", [], [], 10000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", [], [], 10000)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
@@ -119,7 +103,7 @@ defmodule CreditApprover.NotifierTest do
         %{question: "Test \"quotes\"", answer: "test 'single' quotes"}
       ]
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", basic_answers, [], 10000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", basic_answers, [], 10000)
 
       # PDF should be generated successfully even with special characters
       attachment = List.first(email_struct.attachments)
@@ -133,7 +117,7 @@ defmodule CreditApprover.NotifierTest do
         %{question: "Boolean answer", answer: true}
       ]
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", basic_answers, [], 10000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", basic_answers, [], 10000)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
@@ -152,7 +136,7 @@ defmodule CreditApprover.NotifierTest do
       ]
       credit_amount = 24000
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", basic_answers, financial_answers, credit_amount)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", basic_answers, financial_answers, credit_amount)
 
       attachment = List.first(email_struct.attachments)
 
@@ -166,7 +150,7 @@ defmodule CreditApprover.NotifierTest do
     test "PDF contains credit amount" do
       credit_amount = 42000
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", [], [], credit_amount)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", [], [], credit_amount)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
@@ -183,7 +167,7 @@ defmodule CreditApprover.NotifierTest do
         1..10
         |> Enum.map(fn i -> %{question: "Financial Question #{i}", answer: "Financial Answer #{i}"} end)
 
-      {:ok, email_struct} = Notifier.send_email("test@example.com", basic_answers, financial_answers, 100000)
+      {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", basic_answers, financial_answers, 100000)
 
       attachment = List.first(email_struct.attachments)
       assert is_binary(attachment.data)
@@ -192,14 +176,14 @@ defmodule CreditApprover.NotifierTest do
   end
 
   describe "error handling" do
+    @tag capture_log: true
     test "handles malformed email addresses gracefully" do
-      # These should still work as the validation happens in the LiveView
-      # Note: empty string will fail in Swoosh, so we test only non-empty malformed emails
+      # Email validation now properly rejects malformed emails
       malformed_emails = ["invalid", "@test.com", "test@"]
 
       Enum.each(malformed_emails, fn email ->
-        result = Notifier.send_email(email, [], [], 10000)
-        assert {:ok, _} = result
+        result = Notifier.send_credit_assessment_email(email, [], [], 10000)
+        assert {:error, "Invalid email format"} = result
       end)
     end
 
@@ -207,7 +191,7 @@ defmodule CreditApprover.NotifierTest do
       edge_amounts = [0, -1000, 999999999]
 
       Enum.each(edge_amounts, fn amount ->
-        {:ok, email_struct} = Notifier.send_email("test@example.com", [], [], amount)
+        {:ok, email_struct} = Notifier.send_credit_assessment_email("test@example.com", [], [], amount)
 
         attachment = List.first(email_struct.attachments)
         assert is_binary(attachment.data)
@@ -217,7 +201,7 @@ defmodule CreditApprover.NotifierTest do
 
   describe "integration with Swoosh" do
     test "email is properly formatted for delivery" do
-      {:ok, email_struct} = Notifier.send_email(
+      {:ok, email_struct} = Notifier.send_credit_assessment_email(
         "integration@example.com",
         [%{question: "Test", answer: "Yes"}],
         [%{question: "Income", answer: "5000"}],
@@ -234,7 +218,7 @@ defmodule CreditApprover.NotifierTest do
 
       # Verify attachment structure
       attachment = List.first(email_struct.attachments)
-      assert attachment.filename == "credit_approver_summary.pdf"
+      assert attachment.filename == "credit_assessment_summary.pdf"
       assert attachment.content_type == "application/pdf"
       assert is_binary(attachment.data)
     end

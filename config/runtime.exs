@@ -102,3 +102,8 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
+
+config :chromic_pdf,
+  # For Macos, you can use the following path:
+  # we can use .env file to set the path
+  executable_path: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"

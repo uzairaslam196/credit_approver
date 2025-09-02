@@ -19,7 +19,6 @@ defmodule CreditApproverWeb.CreditCalculatorRequirementsTest do
 
       # Should show exact rejection message from requirements
       assert response =~ "Thank you for your answer. We are currently unable to issue credit to you"
-      assert response =~ "Earned Points: 6"
       assert response =~ "Start New Assessment"
 
       # Should NOT show financial questions
@@ -42,7 +41,6 @@ defmodule CreditApproverWeb.CreditCalculatorRequirementsTest do
 
       # Should show exact rejection message from requirements
       assert response =~ "Thank you for your answer. We are currently unable to issue credit to you"
-      assert response =~ "Earned Points: 5"
       assert response =~ "Start New Assessment"
 
       # Should NOT show financial questions
@@ -65,7 +63,6 @@ defmodule CreditApproverWeb.CreditCalculatorRequirementsTest do
 
       # Should show exact rejection message from requirements
       assert response =~ "Thank you for your answer. We are currently unable to issue credit to you"
-      assert response =~ "Earned Points: 0"
       assert response =~ "Start New Assessment"
 
       # Should NOT show financial questions

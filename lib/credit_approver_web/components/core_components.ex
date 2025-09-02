@@ -377,7 +377,7 @@ defmodule CreditApproverWeb.CoreComponents do
           <label class="inline-flex items-center">
             <input
               type="radio"
-              id={@id}
+              id={"#{@id}_#{value}"}
               name={@name}
               value={value}
               checked={Phoenix.HTML.Form.normalize_value("radio", @value) == value}
